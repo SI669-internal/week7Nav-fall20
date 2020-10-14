@@ -10,10 +10,16 @@ class HomeScreen extends React.Component{
 
   constructor(props) {
     super(props);
+    this.state = {
+      message: 'None'
+    }
   }
 
   onFocus = () => {
     console.log('HomeScreen received focus', this.props.route);
+    if (this.props.route.params) {
+      this.setState({message: this.props.route.params.detailsMessage});
+    }
   }
 
   componentDidMount() {
@@ -23,12 +29,11 @@ class HomeScreen extends React.Component{
     );
   }
 
-
   render() {
     return (
       <View style={styles.container}>
-
         <Text>Home Screen</Text>
+        <Text>Message: {this.state.message}</Text>
         <Button
           title="Go to Details"
           onPress={() => this.props.navigation.navigate('Details', {
@@ -58,7 +63,10 @@ class DetailsScreen extends React.Component {
         <Text>itemId: {this.props.route.params.itemId}</Text>
         <Text>otherParam: {this.props.route.params.otherParam}</Text>
         <Button title="Go to Home" onPress={() => 
-          this.props.navigation.navigate('Home')} />
+          this.props.navigation.navigate('Home', 
+            {
+              detailsMessage: "Hello from Details"
+            })} />
       </View>
     );
   }
