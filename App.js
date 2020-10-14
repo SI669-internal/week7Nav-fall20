@@ -3,43 +3,65 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+
 const Stack = createStackNavigator();
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details', {
-          itemId: 86,
-          otherParam: 'anything you want here',
-        })}
-      />
-    </View>
-  )
+class HomeScreen extends React.Component{
+
+  constructor(props) {
+    super(props);
+  }
+
+  onFocus = () => {
+    console.log('HomeScreen received focus', this.props.route);
+  }
+
+  componentDidMount() {
+    console.log("HomeScreen did mount.");
+    this.props.navigation.addListener(
+      'focus', this.onFocus
+    );
+  }
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+
+        <Text>Home Screen</Text>
+        <Button
+          title="Go to Details"
+          onPress={() => this.props.navigation.navigate('Details', {
+            itemId: 86,
+            otherParam: 'anything you want here',
+          })}
+        />
+      </View>
+    );
+  }
 }
 
-function DetailsScreen({ route, navigation }) {
-  /* 2. Get the param */
-  const { itemId , otherParam} = route.params;
-  return (
-    <View style={styles.container}>
-      <Text>Details Screen</Text>
-      <Text>itemId: {itemId}</Text>
-      <Text>otherParam: {otherParam}</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() =>
-          navigation.push('Details', {
-            itemId: Math.floor(Math.random() * 100),
-          })
-        }
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
+
+class DetailsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    console.log("DetailsScreen did mount");
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Details Screen</Text>
+        <Text>itemId: {this.props.route.params.itemId}</Text>
+        <Text>otherParam: {this.props.route.params.otherParam}</Text>
+        <Button title="Go to Home" onPress={() => 
+          this.props.navigation.navigate('Home')} />
+      </View>
+    );
+  }
 }
 
 function App() {
